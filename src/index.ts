@@ -1,5 +1,6 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { MCP_VERSION } from "./utils/constants";
 
 const transport = new StdioClientTransport({
   args: ["dist/server.js"],
@@ -7,7 +8,7 @@ const transport = new StdioClientTransport({
 });
 const client = new Client({
   name: "Solana MCP Client",
-  version: "0.0.1",
+  version: MCP_VERSION,
 });
 
 async function main() {
