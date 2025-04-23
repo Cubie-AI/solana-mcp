@@ -24,7 +24,7 @@ export function attachTokenTools(mcpServer: McpServer, context: Context) {
         content: [
           {
             type: "text",
-            text: JSON.stringify(quote, null, 2),
+            text: `Quote for ${amount} ${quote.inputMint} to ${quote.outputMint}`,
             quote,
           },
         ],

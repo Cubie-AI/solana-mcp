@@ -1,5 +1,6 @@
 import { startMcpClient } from "@cubie-ai/solana-mcp";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { NATIVE_MINT } from "@solana/spl-token";
 
 async function main() {
   const transport = new StdioClientTransport({
@@ -17,15 +18,20 @@ async function main() {
 
   console.dir(resources, { depth: null });
 
-  console.log(
-    "Retrieving token holders for mint: 2MH8ga3TuLvuvX2GUtVRS2BS8B9ujZo3bj5QeAkMpump"
-  );
+  const tools = await client.listTools();
 
-  const cubieHolders = await client.readResource({
-    uri: "token://2MH8ga3TuLvuvX2GUtVRS2BS8B9ujZo3bj5QeAkMpump/holders",
+  console.dir(tools, { depth: null });
+
+  const quote = await client.callTool({
+    name: "getTokenQuote",
+    arguments: {
+      inputMint: NATIVE_MINT.toString(),
+      outputMint: "2MH8ga3TuLvuvX2GUtVRS2BS8B9ujZo3bj5QeAkMpump",
+      amount: 1,
+    },
   });
 
-  console.dir(cubieHolders, { depth: null });
+  console.dir(quote, { depth: null });
 }
 
 main();
