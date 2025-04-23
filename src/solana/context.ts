@@ -1,5 +1,5 @@
-import { Connection } from "@solana/web3.js";
+import { Connection, Keypair } from "@solana/web3.js";
 
 export class Context {
-  constructor(public connection: Connection, public privateKey?: string) {}
+  constructor(public connection: Connection, public privateKey?: Keypair) {}
 }
