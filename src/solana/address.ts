@@ -3,11 +3,11 @@ import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { InvalidValueError } from "../utils/error";
 import { getPublicKey } from "../utils/helpers";
 import { validateListResponse } from "../utils/validators";
-import { solana } from "./connection";
+import { Context } from "./context";
 
-export async function getAddressBalance(address: string) {
+export async function getAddressBalance(address: string, context: Context) {
   try {
-    const accountInfo = await solana.getAccountInfo(
+    const accountInfo = await context.connection.getAccountInfo(
       getPublicKey(address),
       "confirmed"
     );
@@ -30,13 +30,14 @@ export async function getAddressBalance(address: string) {
 export async function getSignaturesForAddress(
   address: string,
   limit = 1000,
+  context: Context,
   options?: {
     before?: string;
     until?: string;
   }
 ) {
   try {
-    const signatures = await solana.getSignaturesForAddress(
+    const signatures = await context.connection.getSignaturesForAddress(
       getPublicKey(address),
       {
         limit,
@@ -52,16 +53,22 @@ export async function getSignaturesForAddress(
   }
 }
 
-export async function getAddressHoldings(address: string) {
+export async function getAddressHoldings(address: string, context: Context) {
   try {
     const mint = getPublicKey(address);
-    const tokens = await solana.getParsedTokenAccountsByOwner(mint, {
-      programId: TOKEN_PROGRAM_ID,
-    });
+    const tokens = await context.connection.getParsedTokenAccountsByOwner(
+      mint,
+      {
+        programId: TOKEN_PROGRAM_ID,
+      }
+    );
 
-    const tokens2022 = await solana.getParsedTokenAccountsByOwner(mint, {
-      programId: TOKEN_2022_PROGRAM_ID,
-    });
+    const tokens2022 = await context.connection.getParsedTokenAccountsByOwner(
+      mint,
+      {
+        programId: TOKEN_2022_PROGRAM_ID,
+      }
+    );
 
     const allTokens = [];
     if (tokens.value && tokens.value.length > 0) {

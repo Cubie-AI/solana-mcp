@@ -1,7 +1,6 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { MCP_VERSION } from "./utils/constants";
 
 interface StartMcpClientParams {
   name?: string;
@@ -9,11 +8,7 @@ interface StartMcpClientParams {
   transport: StdioClientTransport | SSEClientTransport;
 }
 export async function startMcpClient(params: StartMcpClientParams) {
-  const {
-    name = "Solana MCP Client",
-    version = MCP_VERSION,
-    transport,
-  } = params;
+  const { name = "Solana MCP Client", version = "1.0.0", transport } = params;
   const client = new Client({
     name,
     version,

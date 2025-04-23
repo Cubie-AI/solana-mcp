@@ -2,11 +2,14 @@ import { ParsedAccountData, TokenAmount } from "@solana/web3.js";
 import { InvalidValueError } from "../utils/error";
 import { getPublicKey } from "../utils/helpers";
 import { validateListResponse } from "../utils/validators";
-import { solana } from "./connection";
+import { Context } from "./context";
 
-export async function getTokenSupply(mint: string): Promise<TokenAmount> {
+export async function getTokenSupply(
+  mint: string,
+  context: Context
+): Promise<TokenAmount> {
   try {
-    const response = await solana.getTokenSupply(
+    const response = await context.connection.getTokenSupply(
       getPublicKey(mint),
       "confirmed"
     );
@@ -21,22 +24,25 @@ export async function getTokenSupply(mint: string): Promise<TokenAmount> {
   }
 }
 
-export async function getTokenHolders(mint: string) {
+export async function getTokenHolders(mint: string, context: Context) {
   try {
-    const tokenProgramId = await getTokenProgramByMintAddress(mint);
-    const response = await solana.getParsedProgramAccounts(tokenProgramId, {
-      filters: [
-        {
-          dataSize: 165,
-        },
-        {
-          memcmp: {
-            offset: 0,
-            bytes: mint,
+    const tokenProgramId = await getTokenProgramByMintAddress(mint, context);
+    const response = await context.connection.getParsedProgramAccounts(
+      tokenProgramId,
+      {
+        filters: [
+          {
+            dataSize: 165,
           },
-        },
-      ],
-    });
+          {
+            memcmp: {
+              offset: 0,
+              bytes: mint,
+            },
+          },
+        ],
+      }
+    );
 
     validateListResponse(response, "TokenHolders");
 
@@ -55,9 +61,14 @@ export async function getTokenHolders(mint: string) {
   }
 }
 
-export async function getTokenProgramByMintAddress(mint: string) {
+export async function getTokenProgramByMintAddress(
+  mint: string,
+  context: Context
+) {
   try {
-    const response = await solana.getParsedAccountInfo(getPublicKey(mint));
+    const response = await context.connection.getParsedAccountInfo(
+      getPublicKey(mint)
+    );
 
     if (!response || !response.value) {
       throw new InvalidValueError("Invalid response from getParsedAccountInfo");

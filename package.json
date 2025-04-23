@@ -1,6 +1,6 @@
 {
   "name": "@cubie-ai/solana-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A tiny Solana MCP framework built by Cubie AI.",
   "license": "ISC",
   "author": "0xSoc <contact@cubie.fun> (https://cubie.fun)",
@@ -40,8 +40,8 @@
   "scripts": {
     "build": "rm -rf dist/ && tsc",
     "prestart": "npm run build",
-    "start": "node --env-file=.env dist/index.js",
-    "dev": "node --env-file=.env --import tsx --watch -r ts-node/register src/index.ts",
+    "start": "node dist/index.js",
+    "dev": "node --import tsx --watch -r ts-node/register src/index.ts",
     "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -56,7 +56,6 @@
     "@modelcontextprotocol/sdk": "^1.10.2",
     "@solana/spl-token": "^0.4.13",
     "@solana/web3.js": "^1.98.1",
-    "bs58": "^6.0.0",
-    "dotenv": "^16.5.0"
+    "bs58": "^6.0.0"
   }
 }

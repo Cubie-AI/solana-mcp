@@ -18,11 +18,24 @@ I've provided a fully self-contained example in: [/example](/example/) which inc
 
 ### Running the example
 
-To run the example client and server use the following commands:
+To run the example client and server move to the `/example` directory and install the required npm packages:
 
 ```
 cd example
 npm i
+```
+
+Next copy the `.env.example` into `.env` and populate the required fields:
+
+```
+SOLANA_RPC_URL=
+SOLANA_RPC_WSS_URL=
+SOLANA_COMMITMENT=
+```
+
+Then run the example using:
+
+```
 npm start
 ```
 

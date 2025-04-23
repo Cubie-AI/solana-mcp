@@ -1,11 +1,23 @@
 import { Commitment, Connection } from "@solana/web3.js";
-import {
-  SOLANA_COMMITMENT,
-  SOLANA_RPC_URL,
-  SOLANA_RPC_WSS_URL,
-} from "../utils/constants";
 
-export const solana = new Connection(SOLANA_RPC_URL, {
-  wsEndpoint: SOLANA_RPC_WSS_URL,
-  commitment: SOLANA_COMMITMENT as Commitment,
-});
+interface CreateSolanaConnectionParams {
+  rpcUrl?: string;
+  wsUrl?: string;
+  commitment?: string;
+}
+export function createSolanaConnection(params: CreateSolanaConnectionParams) {
+  let {
+    rpcUrl = "https://api.mainnet-beta.solana.com",
+    wsUrl = "",
+    commitment = "confirmed",
+  } = params;
+
+  if (!wsUrl) {
+    wsUrl = rpcUrl.replace("http", "ws");
+  }
+
+  return new Connection(rpcUrl, {
+    commitment: commitment as Commitment,
+    wsEndpoint: wsUrl,
+  });
+}

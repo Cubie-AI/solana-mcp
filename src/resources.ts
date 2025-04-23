@@ -10,6 +10,7 @@ import {
   getAddressHoldings,
   getSignaturesForAddress,
 } from "./solana/address";
+import { Context } from "./solana/context";
 import {
   getTokenHolders,
   getTokenProgramByMintAddress,
@@ -77,7 +78,7 @@ export function attachResource(params: AttachResourceParams) {
   );
 }
 
-export function attachTokenResources(mcpServer: McpServer) {
+export function attachTokenResources(mcpServer: McpServer, context: Context) {
   attachResource({
     mcpServer,
     name: "getTokenSupply",
@@ -88,7 +89,7 @@ export function attachTokenResources(mcpServer: McpServer) {
         throw new Error("Invalid mint address");
       }
 
-      const supply = await getTokenSupply(mint);
+      const supply = await getTokenSupply(mint, context);
 
       return {
         contents: [
@@ -112,7 +113,7 @@ export function attachTokenResources(mcpServer: McpServer) {
         throw new Error("Invalid mint address");
       }
 
-      const holders = await getTokenHolders(mint);
+      const holders = await getTokenHolders(mint, context);
 
       return {
         contents: [
@@ -137,7 +138,7 @@ export function attachTokenResources(mcpServer: McpServer) {
         throw new Error("Invalid mint address");
       }
 
-      const program = await getTokenProgramByMintAddress(mint);
+      const program = await getTokenProgramByMintAddress(mint, context);
 
       return {
         contents: [
@@ -152,7 +153,7 @@ export function attachTokenResources(mcpServer: McpServer) {
   });
 }
 
-export function attachAddressResources(mcpServer: McpServer) {
+export function attachAddressResources(mcpServer: McpServer, context: Context) {
   attachResource({
     mcpServer,
     name: "getAddressBalance",
@@ -163,7 +164,7 @@ export function attachAddressResources(mcpServer: McpServer) {
         throw new Error("Invalid address");
       }
 
-      const balance = await getAddressBalance(address);
+      const balance = await getAddressBalance(address, context);
 
       return {
         contents: [
@@ -187,10 +188,15 @@ export function attachAddressResources(mcpServer: McpServer) {
         throw new Error("Invalid address");
       }
 
-      const signatures = await getSignaturesForAddress(address, limit, {
-        before,
-        until,
-      });
+      const signatures = await getSignaturesForAddress(
+        address,
+        limit,
+        context,
+        {
+          before,
+          until,
+        }
+      );
 
       return {
         contents: [
@@ -214,7 +220,7 @@ export function attachAddressResources(mcpServer: McpServer) {
         throw new Error("Invalid address");
       }
 
-      const tokens = await getAddressHoldings(address);
+      const tokens = await getAddressHoldings(address, context);
 
       return {
         contents: [
