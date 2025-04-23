@@ -18,3 +18,10 @@ export class InvalidValueError extends InternalError {
     this.name = "InvalidValueError";
   }
 }
+
+export class UnsupportedMethod extends InternalError {
+  constructor(message: string) {
+    super(message);
+    this.name = "UnsupportedMethod";
+  }
+}

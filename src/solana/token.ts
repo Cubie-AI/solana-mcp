@@ -84,3 +84,21 @@ export async function getTokenProgramByMintAddress(
     throw error;
   }
 }
+
+export async function getTokenDecimals(mint: string, context: Context) {
+  try {
+    const mintInfo = await context.connection.getParsedAccountInfo(
+      getPublicKey(mint)
+    );
+
+    if (!mintInfo || !mintInfo.value || !mintInfo.value.data) {
+      throw new InvalidValueError("Invalid response from getParsedAccountInfo");
+    }
+
+    const parsedData = mintInfo.value?.data as ParsedAccountData;
+
+    return parsedData.parsed.info.decimals;
+  } catch (error) {
+    throw error;
+  }
+}
