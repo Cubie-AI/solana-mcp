@@ -4,6 +4,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { attachAddressResources, attachTokenResources } from "./resources";
 import { createSolanaConnection } from "./solana/connection";
 import { Context } from "./solana/context";
+import { attachTokenTools } from "./tools";
 
 interface ServerConfig {
   solanaRpcUrl?: string;
@@ -43,7 +44,7 @@ export async function startMcpServer(params: StartMcpServerParams) {
 
   attachTokenResources(mcpServer, context);
   attachAddressResources(mcpServer, context);
-
+  attachTokenTools(mcpServer, context);
   await mcpServer.connect(transport);
 
   console.log(`MCP Server started with name: ${name} and version: ${version}`);
