@@ -1,4 +1,4 @@
-# solana-mcp
+# Solana MCP
 
 ## Installation
 
@@ -14,6 +14,18 @@ View the available resources in: [RESOURCES](RESOURCES.md)
 
 ## Usage
 
+I've provided a fully self-contained example in: [/example](/example/) which includes both the server and the client.
+
+### Running the example
+
+To run the example client and server use the following commands:
+
+```
+cd example
+npm i
+npm start
+```
+
 ### Create a Solana MCP server
 
 Create a `server.js` file and add the following:
@@ -23,10 +35,10 @@ import { startMcpServer } from "@cubie-ai/solana-mcp";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
 async function main() {
-  const server = startMcpServer({
+  await startMcpServer({
     name: "Solana MCP Server",
     version: "1.0.0",
-    transaport: new StdioServerTransport(),
+    transport: new StdioServerTransport(),
   });
 }
 
@@ -43,14 +55,14 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 
 async function main() {
   const transport = new StdioClientTransport({
-    args: ["server.js"],
+    args: ["dist/server.js"],
     command: "node",
   });
 
-  const client = startMcpClient({
+  const client = await startMcpClient({
     name: "Solana MCP Client",
     version: "1.0.0",
-    transaport,
+    transport,
   });
 
   const resources = await client.listResources();
@@ -71,45 +83,57 @@ async function main() {
 main();
 ```
 
-The expected output of the above client program is:
+The expected output of the example program is:
 
 ```
+user@machine ~/solana-mcp/example [main]: npm start
+
+> solana-mcp-example@1.0.0 prestart
+> npm run build
+
+
+> solana-mcp-example@1.0.0 build
+> rm -rf dist/ && tsc
+
+
+> solana-mcp-example@1.0.0 start
+> node --env-file=.env dist/client.js
+
 MCP Client started with name: Solana MCP Client and version: 1.0.0
-MCP Server has the following resources: {
-  "resources": [
+{
+  resources: [
     {
-      "uri": "token://{mint}/supply",
-      "name": "getTokenSupply",
-      "description": "Get the token supply for a given mint address"
+      uri: 'token://{mint}/supply',
+      name: 'getTokenSupply',
+      description: 'Get the token supply for a given mint address'
     },
     {
-      "uri": "token://{mint}/holders",
-      "name": "getTokenHolders",
-      "description": "Get the token holders for a given mint address"
+      uri: 'token://{mint}/holders',
+      name: 'getTokenHolders',
+      description: 'Get the token holders for a given mint address'
     },
     {
-      "uri": "token://{mint}/program",
-      "name": "getTokenProgramByMintAddress",
-      "description": "Get the token program ID for a given mint address"
+      uri: 'token://{mint}/program',
+      name: 'getTokenProgramByMintAddress',
+      description: 'Get the token program ID for a given mint address'
     },
     {
-      "uri": "address://{address}/balance",
-      "name": "getAddressBalance",
-      "description": "Get the wallet balance for a given address"
+      uri: 'address://{address}/balance',
+      name: 'getAddressBalance',
+      description: 'Get the wallet balance for a given address'
     },
     {
-      "uri": "address://{address}/signatures",
-      "name": "getSignaturesForAddress",
-      "description": "Get the transaction signatures for a given address"
+      uri: 'address://{address}/signatures',
+      name: 'getSignaturesForAddress',
+      description: 'Get the transaction signatures for a given address'
     },
     {
-      "uri": "address://{address}/tokens",
-      "name": "getTokensByAddress",
-      "description": "Get the token holdings for a given address"
+      uri: 'address://{address}/tokens',
+      name: 'getTokensByAddress',
+      description: 'Get the token holdings for a given address'
     }
   ]
 }
-
 Retrieving token holders for mint: 2MH8ga3TuLvuvX2GUtVRS2BS8B9ujZo3bj5QeAkMpump
 {
   contents: [
@@ -119,30 +143,22 @@ Retrieving token holders for mint: 2MH8ga3TuLvuvX2GUtVRS2BS8B9ujZo3bj5QeAkMpump
       mint: '2MH8ga3TuLvuvX2GUtVRS2BS8B9ujZo3bj5QeAkMpump',
       holders: [
         {
-          owner: 'HAMpE3xwU5bsRfKzzL45sgoYpCKcgtMeMmTKfrbs1oRv',
+          owner: '2Z169Z5yiZ9oWKcLozg554j92mwew7G7U1nbcNntg8gf',
           mint: '2MH8ga3TuLvuvX2GUtVRS2BS8B9ujZo3bj5QeAkMpump',
-          amount: '199043148426',
+          amount: '1762076148',
           decimals: 6,
-          uiAmount: 199043.148426,
-          uiAmountString: '199043.148426'
+          uiAmount: 1762.076148,
+          uiAmountString: '1762.076148'
         },
         {
-          owner: '2Tmgd28h22G5xXUCRdeJSg1Kf3HYEV8Vz1vuHC6j6AWW',
+          owner: 'D8PEpdPjoRGBk3zrH1kwHuyzkwTcjj845kGXQYzJzSYV',
           mint: '2MH8ga3TuLvuvX2GUtVRS2BS8B9ujZo3bj5QeAkMpump',
-          amount: '1',
+          amount: '6',
           decimals: 6,
-          uiAmount: 0.000001,
-          uiAmountString: '0.000001'
+          uiAmount: 0.000006,
+          uiAmountString: '0.000006'
         },
-        {
-          owner: 'BVi3YPRCFQeHd6AvgEr6C4gq2HZK6Gnw7i3fA75PnkZw',
-          mint: '2MH8ga3TuLvuvX2GUtVRS2BS8B9ujZo3bj5QeAkMpump',
-          amount: '1098877766667',
-          decimals: 6,
-          uiAmount: 1098877.766667,
-          uiAmountString: '1098877.766667'
-        },
-        ... 1400 more items
+        ... 700 more items
       ]
     }
   ]

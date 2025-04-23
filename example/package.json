@@ -9,13 +9,11 @@
   "scripts": {
     "build": "rm -rf dist/ && tsc",
     "prestart": "npm run build",
-    "start": "node --env-file=.env dist/index.js",
-    "dev": "node --env-file=.env --import tsx --watch -r ts-node/register src/index.ts",
-    "prepublishOnly": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --env-file=.env dist/client.js",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@cubie-ai/solana-mcp": "^1.0.0",
+    "@cubie-ai/solana-mcp": "^1.0.1",
     "@modelcontextprotocol/sdk": "^1.10.2"
   },
   "devDependencies": {
