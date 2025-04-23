@@ -11,3 +11,10 @@ export class InvalidPublicKey extends InternalError {
     this.name = "InvalidPublicKey";
   }
 }
+
+export class InvalidValueError extends InternalError {
+  constructor(message: string) {
+    super(message);
+    this.name = "InvalidValueError";
+  }
+}
