@@ -1,17 +1,48 @@
 {
-  "name": "cubie_mcp",
+  "name": "@cubie-ai/solana-mcp",
   "version": "1.0.0",
-  "description": "",
+  "description": "A tiny Solana MCP framework built by Cubie AI.",
   "license": "ISC",
-  "author": "",
+  "author": "0xSoc <contact@cubie.fun> (https://cubie.fun)",
+  "homepage": "https://cubie.fun",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cubie-AI/solana-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Cubie-AI/solana-mcp/issues"
+  },
   "type": "commonjs",
   "main": "dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "cubie-ai",
+    "solana",
+    "mcp",
+    "solana-mcp"
+  ],
   "scripts": {
     "build": "rm -rf dist/ && tsc",
     "prestart": "npm run build",
     "start": "node --env-file=.env dist/index.js",
     "dev": "node --env-file=.env --import tsx --watch -r ts-node/register src/index.ts",
-    "scripts": "node --env-file=.env --import tsx -r ts-node/register ",
+    "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {

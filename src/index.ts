@@ -1,3 +1,4 @@
-import { startClient } from "./client";
+import { startMcpClient } from "./client";
+import { startMcpServer } from "./server";
 
-startClient();
+export { startMcpClient, startMcpServer };
