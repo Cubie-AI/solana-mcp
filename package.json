@@ -1,0 +1,31 @@
+{
+  "name": "cubie_mcp",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rm -rf dist/ && tsc",
+    "prestart": "npm run build",
+    "start": "node --env-file=.env dist/index.js",
+    "dev": "node --env-file=.env --import tsx --watch -r ts-node/register src/index.ts",
+    "scripts": "node --env-file=.env --import tsx -r ts-node/register ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.1",
+    "@types/node": "^22.14.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.10.2",
+    "@solana/spl-token": "^0.4.13",
+    "@solana/web3.js": "^1.98.1",
+    "bs58": "^6.0.0",
+    "dotenv": "^16.5.0"
+  }
+}
