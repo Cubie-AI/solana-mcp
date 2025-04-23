@@ -1,6 +1,6 @@
 {
   "name": "@cubie-ai/solana-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A tiny Solana MCP framework built by Cubie AI.",
   "license": "ISC",
   "author": "0xSoc <contact@cubie.fun> (https://cubie.fun)",
