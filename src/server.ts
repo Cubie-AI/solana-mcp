@@ -5,6 +5,11 @@ import { attachAddressResources, attachTokenResources } from "./resources";
 import { createSolanaConnection } from "./solana/connection";
 import { Context } from "./solana/context";
 import { attachTokenTools } from "./tools";
+import {
+  DEFAULT_SERVER_NAME,
+  DEFAULT_SERVER_VERSION,
+  DEFAULT_SOLANA_CONFIG,
+} from "./utils/constants";
 
 interface ServerConfig {
   solanaRpcUrl?: string;
@@ -12,31 +17,23 @@ interface ServerConfig {
   commitment?: string;
 }
 interface StartMcpServerParams {
-  name?: string;
-  version?: string;
   transport: StdioServerTransport | SSEServerTransport;
   config: ServerConfig;
+  name?: string;
+  version?: string;
 }
 
 export async function startMcpServer(params: StartMcpServerParams) {
   const {
-    name = "Solana MCP Server",
-    version = "1.0.0",
+    name = DEFAULT_SERVER_NAME,
+    version = DEFAULT_SERVER_VERSION,
     transport,
-    config = {
-      solanaRpcUrl: "https://api.mainnet-beta.solana.com",
-      solanaRpcWsUrl: "wss://api.mainnet-beta.solana.com/stream",
-      commitment: "confirmed",
-    },
+    config = DEFAULT_SOLANA_CONFIG,
   } = params;
 
-  const context = new Context(
-    createSolanaConnection({
-      rpcUrl: config.solanaRpcUrl,
-      wsUrl: config.solanaRpcWsUrl,
-      commitment: config.commitment,
-    })
-  );
+  const connection = createSolanaConnection(config);
+
+  const context = new Context(connection);
   const mcpServer = new McpServer({
     name,
     version,
@@ -45,8 +42,7 @@ export async function startMcpServer(params: StartMcpServerParams) {
   attachTokenResources(mcpServer, context);
   attachAddressResources(mcpServer, context);
   attachTokenTools(mcpServer, context);
-  await mcpServer.connect(transport);
 
-  console.log(`MCP Server started with name: ${name} and version: ${version}`);
+  await mcpServer.connect(transport);
   return mcpServer;
 }
