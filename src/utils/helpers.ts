@@ -44,13 +44,13 @@ async function safeList<Method extends () => Promise<any>>(method: Method) {
 }
 
 export async function safeListResources(mcpClient: Client) {
-  return safeList(mcpClient.listResources);
+  return await safeList(mcpClient.listResources);
 }
 
 export async function safeListTools(mcpClient: Client) {
-  return safeList(mcpClient.listTools);
+  return await safeList(mcpClient.listTools);
 }
 
 export async function safeListPrompts(mcpClient: Client) {
-  return safeList(mcpClient.listPrompts);
+  return await safeList(mcpClient.listPrompts);
 }

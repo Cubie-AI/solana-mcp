@@ -31,13 +31,13 @@ export async function startMcpServer(params: StartMcpServerParams) {
     config = DEFAULT_SOLANA_CONFIG,
   } = params;
 
-  const connection = createSolanaConnection(config);
-
-  const context = new Context(connection);
   const mcpServer = new McpServer({
     name,
     version,
   });
+
+  const connection = createSolanaConnection(config);
+  const context = new Context(connection);
 
   attachTokenResources(mcpServer, context);
   attachAddressResources(mcpServer, context);
