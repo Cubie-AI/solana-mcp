@@ -137,7 +137,7 @@ export async function getPrice(params: GetPriceParams) {
     } = params;
 
     const urlSearchParams = new URLSearchParams({
-      ids: [inputMint],
+      ids: Array.isArray(inputMint) ? inputMint.join(",") : inputMint,
       vsToken: outputMint,
     });
     const response = await fetch(

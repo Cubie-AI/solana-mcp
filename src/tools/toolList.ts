@@ -80,7 +80,10 @@ export const SUPPORTED_TOOLS: ToolSpec[] = [
     name: "getPrice",
     parameters: {
       inputMint: z.string(),
-      outputMint: z.string(),
+      outputMint: z
+        .string()
+        .optional()
+        .default("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
     },
     method: getPrice,
   },
