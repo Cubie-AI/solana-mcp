@@ -18,8 +18,8 @@ function buildToolHandler(tool: ToolMethod, context: Context) {
       content: [
         {
           type: "text",
-          text: JSON.stringify(result.data, null, 2),
           success: result.success,
+          ...result.data,
         },
       ],
     };
