@@ -4,7 +4,7 @@ import {
   getAddressHoldings,
   getSignaturesForAddress,
 } from "../solana/address";
-import { getQuote } from "../solana/jupiter";
+import { getPrice, getQuote } from "../solana/jupiter";
 import {
   getTokenHolders,
   getTokenProgramByMintAddress,
@@ -74,5 +74,14 @@ export const SUPPORTED_TOOLS: ToolSpec[] = [
       slippage: z.string().optional(),
     },
     method: getQuote,
+  },
+
+  {
+    name: "getPrice",
+    parameters: {
+      inputMint: z.string(),
+      outputMint: z.string(),
+    },
+    method: getPrice,
   },
 ];

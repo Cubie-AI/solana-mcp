@@ -1,53 +1,19 @@
 import { VersionedTransaction } from "@solana/web3.js";
 import { UnsupportedMethod } from "../utils/error";
 import { Context } from "./context";
+import {
+  GetPriceParams,
+  JupiterQuoteParams,
+  JupiterSwapParams,
+  JupiterSwapResponse,
+  PriceResponse,
+  SolanaMCPQuoteResponse,
+} from "./jupiter.types";
 import { getTokenDecimals } from "./token";
 import {
   extractTransactionInstructions,
   sendAndConfirmTransaction,
 } from "./transaction";
-
-interface JupiterQuoteParams {
-  inputMint: string;
-  outputMint: string;
-  amount: number;
-  slippage?: number;
-  swapMode?: "ExactIn" | "ExactOut";
-}
-
-interface JupiteRouteResponse {
-  swapInfo: {
-    ammKey: string;
-    label: string;
-    inputMint: string;
-    outputMint: string;
-    inAmount: string;
-    outAmount: string;
-    feeAmount: string;
-    feeMint: string;
-  };
-  percent: number;
-}
-
-interface JupiterQuoteResponse {
-  inputMint: string;
-  inAmount: string;
-  outputMint: string;
-  outAmount: string;
-  otherAmountThreshold: string;
-  swapMode: "ExactIn" | "ExactOut";
-  slippageBps: number;
-  platformFee: null;
-  priceImpactPct: string;
-  routePlan: JupiteRouteResponse[];
-  contextSlot: number;
-  timeTaken: number;
-}
-
-interface SolanaMCPQuoteResponse extends JupiterQuoteResponse {
-  outputUIAmount: string;
-  inputUIAmount: string;
-}
 
 export async function getQuote(params: JupiterQuoteParams, context: Context) {
   try {
@@ -103,29 +69,6 @@ export async function getQuote(params: JupiterQuoteParams, context: Context) {
   }
 }
 
-interface JupiterSwapParams extends JupiterQuoteParams {}
-
-interface JupiterSwapResponse {
-  swapTransaction: string;
-  lastValidBlockHeight: number;
-  prioritizationFeeLamports: number;
-  computeUnitLimit: number;
-  prioritizationType: {
-    computeBudget: {
-      microLamports: number;
-      estimatedMicroLamports: number;
-    };
-  };
-  dynamicSlippageReport: {
-    slippageBps: number;
-    otherAmount: number;
-    simulatedIncurredSlippageBps: number;
-    amplificationRatio: string;
-    categoryName: string;
-    heuristicMaxSlippageBps: number;
-  };
-  simulationError: null | string;
-}
 export async function swap(params: JupiterSwapParams, context: Context) {
   try {
     if (!context.privateKey) {
@@ -181,6 +124,39 @@ export async function swap(params: JupiterSwapParams, context: Context) {
     });
 
     return signature;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function getPrice(params: GetPriceParams) {
+  try {
+    const {
+      inputMint,
+      outputMint = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    } = params;
+
+    const urlSearchParams = new URLSearchParams({
+      ids: [inputMint],
+      vsToken: outputMint,
+    });
+    const response = await fetch(
+      `https://lite-api.jup.ag/price/v2?${urlSearchParams}`
+    );
+
+    const responseJson = (await response.json()) as PriceResponse;
+
+    if (
+      response.status !== 200 ||
+      !responseJson?.data ||
+      !(inputMint in responseJson.data)
+    ) {
+      throw new Error(
+        `Error fetching price: ${response.status} ${response.statusText}`
+      );
+    }
+
+    return responseJson.data[inputMint];
   } catch (error) {
     throw error;
   }
