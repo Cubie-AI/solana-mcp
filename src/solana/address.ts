@@ -5,7 +5,14 @@ import { getPublicKey } from "../utils/helpers";
 import { validateListResponse } from "../utils/validators";
 import { Context } from "./context";
 
-export async function getAddressBalance(address: string, context: Context) {
+interface GetAddressBalanceParams {
+  address: string;
+}
+export async function getAddressBalance(
+  params: GetAddressBalanceParams,
+  context: Context
+) {
+  const { address } = params;
   try {
     const accountInfo = await context.connection.getAccountInfo(
       getPublicKey(address),
@@ -27,21 +34,24 @@ export async function getAddressBalance(address: string, context: Context) {
   }
 }
 
+interface GetSignatureParams {
+  address: string;
+  limit?: number;
+  before?: string;
+  until?: string;
+}
 export async function getSignaturesForAddress(
-  address: string,
-  limit = 1000,
-  context: Context,
-  options?: {
-    before?: string;
-    until?: string;
-  }
+  params: GetSignatureParams,
+  context: Context
 ) {
+  const { address, limit, before, until } = params;
   try {
     const signatures = await context.connection.getSignaturesForAddress(
       getPublicKey(address),
       {
         limit,
-        ...(options ?? {}),
+        before,
+        until,
       }
     );
 
@@ -53,7 +63,14 @@ export async function getSignaturesForAddress(
   }
 }
 
-export async function getAddressHoldings(address: string, context: Context) {
+interface GetAddressHoldingsParams {
+  address: string;
+}
+export async function getAddressHoldings(
+  params: GetAddressHoldingsParams,
+  context: Context
+) {
+  const { address } = params;
   try {
     const mint = getPublicKey(address);
     const tokens = await context.connection.getParsedTokenAccountsByOwner(

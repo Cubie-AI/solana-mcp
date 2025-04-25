@@ -4,10 +4,14 @@ import { getPublicKey } from "../utils/helpers";
 import { validateListResponse } from "../utils/validators";
 import { Context } from "./context";
 
+interface MintParams {
+  mint: string;
+}
 export async function getTokenSupply(
-  mint: string,
+  params: MintParams,
   context: Context
 ): Promise<TokenAmount> {
+  const { mint } = params;
   try {
     const response = await context.connection.getTokenSupply(
       getPublicKey(mint),
@@ -24,9 +28,13 @@ export async function getTokenSupply(
   }
 }
 
-export async function getTokenHolders(mint: string, context: Context) {
+export async function getTokenHolders(params: MintParams, context: Context) {
   try {
-    const tokenProgramId = await getTokenProgramByMintAddress(mint, context);
+    const { mint } = params;
+    const tokenProgramId = await getTokenProgramByMintAddress(
+      { mint },
+      context
+    );
     const response = await context.connection.getParsedProgramAccounts(
       tokenProgramId,
       {
@@ -62,10 +70,11 @@ export async function getTokenHolders(mint: string, context: Context) {
 }
 
 export async function getTokenProgramByMintAddress(
-  mint: string,
+  params: MintParams,
   context: Context
 ) {
   try {
+    const { mint } = params;
     const response = await context.connection.getParsedAccountInfo(
       getPublicKey(mint)
     );
@@ -85,8 +94,9 @@ export async function getTokenProgramByMintAddress(
   }
 }
 
-export async function getTokenDecimals(mint: string, context: Context) {
+export async function getTokenDecimals(params: MintParams, context: Context) {
   try {
+    const { mint } = params;
     const mintInfo = await context.connection.getParsedAccountInfo(
       getPublicKey(mint)
     );

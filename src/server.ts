@@ -1,10 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { attachAddressResources, attachTokenResources } from "./resources";
 import { createSolanaConnection } from "./solana/connection";
 import { Context } from "./solana/context";
-import { attachTokenTools } from "./tools";
+import { bindTools } from "./tools/tools";
 import {
   DEFAULT_SERVER_NAME,
   DEFAULT_SERVER_VERSION,
@@ -39,10 +38,7 @@ export async function startMcpServer(params: StartMcpServerParams) {
   const connection = createSolanaConnection(config);
   const context = new Context(connection);
 
-  attachTokenResources(mcpServer, context);
-  attachAddressResources(mcpServer, context);
-  attachTokenTools(mcpServer, context);
-
+  bindTools(mcpServer, context);
   await mcpServer.connect(transport);
   return mcpServer;
 }

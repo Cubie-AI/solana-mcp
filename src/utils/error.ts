@@ -25,3 +25,7 @@ export class UnsupportedMethod extends InternalError {
     this.name = "UnsupportedMethod";
   }
 }
+
+export function getErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : "Unknown error";
+}

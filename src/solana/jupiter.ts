@@ -59,8 +59,14 @@ export async function getQuote(params: JupiterQuoteParams, context: Context) {
       swapMode = "ExactIn",
     } = params;
 
-    const inputMintDecimals = await getTokenDecimals(inputMint, context);
-    const outputMintDecimals = await getTokenDecimals(outputMint, context);
+    const inputMintDecimals = await getTokenDecimals(
+      { mint: inputMint },
+      context
+    );
+    const outputMintDecimals = await getTokenDecimals(
+      { mint: outputMint },
+      context
+    );
 
     let normalizedAmount;
     if (swapMode === "ExactIn") {
