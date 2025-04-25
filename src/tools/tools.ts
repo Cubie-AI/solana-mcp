@@ -27,8 +27,13 @@ function buildToolHandler(tool: ToolMethod, context: Context) {
 }
 
 export function bindTools(server: McpServer, context: Context) {
-  for (const { name, parameters, method } of SUPPORTED_TOOLS) {
+  for (const { name, description, parameters, method } of SUPPORTED_TOOLS) {
     console.log(`Binding tool: ${name}`);
-    server.tool(name, parameters, buildToolHandler(method, context));
+    server.tool(
+      name,
+      description,
+      parameters,
+      buildToolHandler(method, context)
+    );
   }
 }

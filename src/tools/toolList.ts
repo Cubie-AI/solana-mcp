@@ -14,6 +14,7 @@ import { ToolMethod } from "./tool.types";
 
 type ToolSpec = {
   name: string;
+  description: string;
   parameters: ZodRawShape;
   method: ToolMethod;
 };
@@ -21,6 +22,7 @@ type ToolSpec = {
 export const SUPPORTED_TOOLS: ToolSpec[] = [
   {
     name: "getTokenHolders",
+    description: "Get token holders for a specific mint address",
     parameters: {
       mint: z.string(),
     },
@@ -28,6 +30,7 @@ export const SUPPORTED_TOOLS: ToolSpec[] = [
   },
   {
     name: "getTokenSupply",
+    description: "Get the total supply of a specific token",
     parameters: {
       mint: z.string(),
     },
@@ -35,6 +38,7 @@ export const SUPPORTED_TOOLS: ToolSpec[] = [
   },
   {
     name: "getTokenProgramByMintAddress",
+    description: "Get the token program by mint address",
     parameters: {
       mint: z.string(),
     },
@@ -44,6 +48,7 @@ export const SUPPORTED_TOOLS: ToolSpec[] = [
   // Tools for operating on an address
   {
     name: "getAddressBalance",
+    description: "Get the balance of a specific address",
     parameters: {
       address: z.string(),
     },
@@ -51,6 +56,7 @@ export const SUPPORTED_TOOLS: ToolSpec[] = [
   },
   {
     name: "getAddressHoldings",
+    description: "Get the holdings of a specific address",
     parameters: {
       address: z.string(),
     },
@@ -58,6 +64,7 @@ export const SUPPORTED_TOOLS: ToolSpec[] = [
   },
   {
     name: "getSignaturesForAddress",
+    description: "Get the signatures for a specific address",
     parameters: {
       address: z.string(),
     },
@@ -67,6 +74,7 @@ export const SUPPORTED_TOOLS: ToolSpec[] = [
   // Jupiter tools
   {
     name: "getJupiterQuote",
+    description: "Get a quote from Jupiter for a specific swap",
     parameters: {
       inputMint: z.string(),
       outputMint: z.string(),
@@ -78,6 +86,7 @@ export const SUPPORTED_TOOLS: ToolSpec[] = [
 
   {
     name: "getPrice",
+    description: "Get the price of a specific token",
     parameters: {
       inputMint: z.string(),
       outputMint: z
