@@ -18,8 +18,8 @@ export async function startMcpClient(params: StartMcpClientParams) {
   const client = new Client({
     name,
     version,
+    transport: transport,
   });
-
   await client.connect(transport);
 
   console.log(`MCP Client started with name: ${name} and version: ${version}`);

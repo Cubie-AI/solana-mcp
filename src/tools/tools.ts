@@ -7,6 +7,8 @@ import { SUPPORTED_TOOLS } from "./toolList";
 
 function buildToolHandler(tool: ToolMethod, context: Context) {
   return async (args: any): Promise<CallToolResult> => {
+    console.log("Starting tool execution...");
+    console.dir(args, { depth: 5 });
     let result: Result;
     try {
       const data = await tool(args, context);
@@ -28,7 +30,6 @@ function buildToolHandler(tool: ToolMethod, context: Context) {
 
 export function bindTools(server: McpServer, context: Context) {
   for (const { name, description, parameters, method } of SUPPORTED_TOOLS) {
-    console.log(`Binding tool: ${name}`);
     server.tool(
       name,
       description,

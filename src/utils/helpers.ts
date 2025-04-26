@@ -45,13 +45,29 @@ async function safeList<Method extends () => Promise<any>>(
 }
 
 export async function safeListResources(mcpClient: Client) {
-  return await safeList(async () => await mcpClient.listResources());
+  const result = await safeList(async () => await mcpClient.listResources());
+  return {
+    success: result.success,
+    data: result.data?.resources || [],
+  };
 }
 
 export async function safeListTools(mcpClient: Client) {
-  return await safeList(async () => await mcpClient.listTools());
+  const { success, data } = await safeList(
+    async () => await mcpClient.listTools()
+  );
+  return {
+    success,
+    data: data?.tools || [],
+  };
 }
 
 export async function safeListPrompts(mcpClient: Client) {
-  return await safeList(async () => await mcpClient.listPrompts());
+  const { success, data } = await safeList(
+    async () => await mcpClient.listPrompts()
+  );
+  return {
+    success,
+    data: data?.prompts || [],
+  };
 }
