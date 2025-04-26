@@ -15,13 +15,13 @@ export async function transferSolana(
     const amount = Math.floor(params.amount * LAMPORTS_PER_SOL); // 1 sol = 1e9 lamports
     const { to } = params;
 
-    if (!context.privateKey) {
-      throw new Error("Private key is required for transfer");
+    if (!context.keypair) {
+      throw new Error("Keypair is required for transfer");
     }
 
     const instructions = [
       SystemProgram.transfer({
-        fromPubkey: context.privateKey.publicKey,
+        fromPubkey: context.keypair.publicKey,
         toPubkey: getPublicKey(to), // Ensure to use the correct public key
         lamports: amount,
       }),
@@ -29,7 +29,7 @@ export async function transferSolana(
 
     const signature = await sendAndConfirmTransaction({
       instructions,
-      payer: context.privateKey,
+      payer: context.keypair,
       context: context,
       signers: [],
       commitment: "confirmed",

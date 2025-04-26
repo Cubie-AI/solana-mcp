@@ -71,8 +71,10 @@ export async function getQuote(params: JupiterQuoteParams, context: Context) {
 
 export async function swap(params: JupiterSwapParams, context: Context) {
   try {
-    if (!context.privateKey) {
-      throw new UnsupportedMethod("No private key provided");
+    if (!context.keypair) {
+      throw new UnsupportedMethod(
+        "To use the swap method, a keypair is required"
+      );
     }
 
     const quote = await getQuote(params, context);
@@ -86,7 +88,7 @@ export async function swap(params: JupiterSwapParams, context: Context) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userPublicKey: context.privateKey.publicKey.toBase58(),
+          userPublicKey: context.keypair.publicKey.toBase58(),
           quoteResponse: quote,
           dynamicComputeUnitLimit: true,
           dynamicSlippage: true,
@@ -118,7 +120,7 @@ export async function swap(params: JupiterSwapParams, context: Context) {
     // Call our redundant sendAndConfirmTransaction function
     const signature = await sendAndConfirmTransaction({
       instructions,
-      payer: context.privateKey,
+      payer: context.keypair,
       signers: [],
       context,
     });

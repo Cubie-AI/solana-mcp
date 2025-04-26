@@ -1,6 +1,6 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { PublicKey } from "@solana/web3.js";
-import { InvalidPublicKey } from "./error";
+import { getErrorMessage, InvalidPublicKey } from "./error";
 
 export function getPublicKey(address: string) {
   try {
@@ -16,11 +16,12 @@ interface SafeListResult<T> {
   error?: string;
 }
 
-type ExtractSafeResult<T extends (args: any) => Promise<any>> = SafeListResult<
-  Awaited<ReturnType<T>>
->;
+type ExtractSafeResult<T extends (args: any) => PromiseLike<any>> =
+  SafeListResult<Awaited<ReturnType<T>>>;
 
-async function safeList<Method extends () => Promise<any>>(method: Method) {
+async function safeList<Method extends () => Promise<any>>(
+  method: Method
+): Promise<ExtractSafeResult<Method>> {
   let result: ExtractSafeResult<Method>;
 
   try {
@@ -36,7 +37,7 @@ async function safeList<Method extends () => Promise<any>>(method: Method) {
   } catch (error) {
     result = {
       success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
+      error: getErrorMessage(error),
     };
   }
 
