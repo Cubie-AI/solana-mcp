@@ -1,7 +1,7 @@
-import { describe, it, expect } from '@jest/globals';
+import { describe, expect, it } from "@jest/globals";
 
-describe('utils/index', () => {
-  it('should pass a basic test', () => {
+describe("utils/index", () => {
+  it("should pass a basic test", () => {
     expect(true).toBe(true);
   });
 });
