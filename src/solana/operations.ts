@@ -1,5 +1,5 @@
 import { LAMPORTS_PER_SOL, SystemProgram } from "@solana/web3.js";
-import { getPublicKey } from "../utils/helpers";
+import { getPublicKey } from "../utils";
 import { Context } from "./context";
 import { sendAndConfirmTransaction } from "./transaction";
 

@@ -1,7 +1,7 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { DEFAULT_CLIENT_NAME, DEFAULT_CLIENT_VERSION } from "./utils/constants";
+import { DEFAULT_CLIENT_NAME, DEFAULT_CLIENT_VERSION } from "./utils";
 
 interface StartMcpClientParams {
   transport: StdioClientTransport | SSEClientTransport;

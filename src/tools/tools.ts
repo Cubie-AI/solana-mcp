@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { Context } from "../solana/context";
-import { err, ok, Result } from "../utils/result";
+import { Context } from "../solana";
+import { err, ok, Result } from "../utils";
 import { ToolMethod } from "./tool.types";
 import { SUPPORTED_TOOLS } from "./toolList";
 
@@ -19,7 +19,7 @@ function buildToolHandler(tool: ToolMethod, context: Context) {
         {
           type: "text",
           success: result.success,
-          ...result.data,
+          ...(result?.data || {}),
         },
       ],
     };

@@ -83,11 +83,11 @@ interface GetPriceParams {
 }
 
 export {
-  GetPriceParams,
-  JupiterQuoteParams,
-  JupiterSwapParams,
-  JupiterSwapResponse,
-  PriceResponse,
-  SolanaMCPQuoteResponse,
-  TokenPrice,
+  type GetPriceParams,
+  type JupiterQuoteParams,
+  type JupiterSwapParams,
+  type JupiterSwapResponse,
+  type PriceResponse,
+  type SolanaMCPQuoteResponse,
+  type TokenPrice,
 };

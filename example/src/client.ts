@@ -10,7 +10,7 @@ async function main() {
   const client = await startMcpClient({
     name: "Solana MCP Client",
     version: "1.0.0",
-    transport,
+    transport: transport,
   });
 
   const tools = await client.listTools();

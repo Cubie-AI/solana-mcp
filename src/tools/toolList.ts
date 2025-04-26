@@ -1,15 +1,16 @@
 import { z, ZodRawShape } from "zod";
 import {
-  getAddressBalance,
-  getAddressHoldings,
-  getSignaturesForAddress,
-} from "../solana/address";
-import { getPrice, getQuote } from "../solana/jupiter";
-import {
+  getPrice,
+  getQuote,
   getTokenHolders,
   getTokenProgramByMintAddress,
   getTokenSupply,
-} from "../solana/token";
+} from "../solana";
+import {
+  getAddressBalance,
+  getAddressHoldings,
+  getSignaturesForAddress,
+} from "../solana/";
 import { ToolMethod } from "./tool.types";
 
 type ToolSpec = {

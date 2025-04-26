@@ -1,14 +1,13 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { createSolanaConnection } from "./solana/connection";
-import { Context } from "./solana/context";
-import { bindTools } from "./tools/tools";
+import { Context, createSolanaConnection } from "./solana";
+import { bindTools } from "./tools";
 import {
   DEFAULT_SERVER_NAME,
   DEFAULT_SERVER_VERSION,
   DEFAULT_SOLANA_CONFIG,
-} from "./utils/constants";
+} from "./utils";
 
 interface ServerConfig {
   solanaRpcUrl?: string;

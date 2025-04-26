@@ -1,5 +1,5 @@
 import { VersionedTransaction } from "@solana/web3.js";
-import { UnsupportedMethod } from "../utils/error";
+import { UnsupportedMethod } from "../utils";
 import { Context } from "./context";
 import {
   GetPriceParams,
@@ -140,6 +140,7 @@ export async function getPrice(params: GetPriceParams) {
       ids: Array.isArray(inputMint) ? inputMint.join(",") : inputMint,
       vsToken: outputMint,
     });
+
     const response = await fetch(
       `https://lite-api.jup.ag/price/v2?${urlSearchParams}`
     );
