@@ -1,6 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { Keypair } from "@solana/web3.js";
 import { Context, createSolanaConnection } from "./solana";
 import { bindTools } from "./tools";
@@ -45,7 +46,10 @@ export interface StartMcpServerParams {
    * The transport mechanism to use for the server.
    * Can be either StdioServerTransport or SSEServerTransport.
    */
-  transport: StdioServerTransport | SSEServerTransport;
+  transport:
+    | StdioServerTransport
+    | SSEServerTransport
+    | StreamableHTTPServerTransport;
   /**
    * The configuration for the server.
    * This includes the Solana RPC URL, WebSocket URL, and commitment level.
