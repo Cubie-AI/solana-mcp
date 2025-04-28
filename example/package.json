@@ -13,7 +13,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@cubie-ai/solana-mcp": "^1.0.13",
+    "@cubie-ai/solana-mcp": "file:..",
     "@modelcontextprotocol/sdk": "^1.10.2",
     "dotenv": "^16.5.0",
     "zod": "^3.23.8"

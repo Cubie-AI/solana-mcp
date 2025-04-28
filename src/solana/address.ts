@@ -5,11 +5,13 @@ import {
   InvalidValueError,
   validateListResponse,
 } from "../utils";
+import {
+  GetAddressBalanceParams,
+  GetAddressHoldingsParams,
+  GetSignatureParams,
+} from "./address.types";
 import { Context } from "./context";
 
-interface GetAddressBalanceParams {
-  address: string;
-}
 export async function getAddressBalance(
   params: GetAddressBalanceParams,
   context: Context
@@ -36,12 +38,6 @@ export async function getAddressBalance(
   }
 }
 
-interface GetSignatureParams {
-  address: string;
-  limit?: number;
-  before?: string;
-  until?: string;
-}
 export async function getSignaturesForAddress(
   params: GetSignatureParams,
   context: Context
@@ -58,36 +54,30 @@ export async function getSignaturesForAddress(
     );
 
     validateListResponse(signatures, "SignaturesForAddress");
-
     return signatures;
   } catch (error) {
     throw error;
   }
 }
 
-interface GetAddressHoldingsParams {
-  address: string;
-}
+/**
+ * Fetches the Token and Token 2022 accounts for a given address.
+ */
 export async function getAddressHoldings(
   params: GetAddressHoldingsParams,
   context: Context
 ) {
   const { address } = params;
+  const { connection } = context;
   try {
     const mint = getPublicKey(address);
-    const tokens = await context.connection.getParsedTokenAccountsByOwner(
-      mint,
-      {
-        programId: TOKEN_PROGRAM_ID,
-      }
-    );
+    const tokens = await connection.getParsedTokenAccountsByOwner(mint, {
+      programId: TOKEN_PROGRAM_ID,
+    });
 
-    const tokens2022 = await context.connection.getParsedTokenAccountsByOwner(
-      mint,
-      {
-        programId: TOKEN_2022_PROGRAM_ID,
-      }
-    );
+    const tokens2022 = await connection.getParsedTokenAccountsByOwner(mint, {
+      programId: TOKEN_2022_PROGRAM_ID,
+    });
 
     const allTokens = [];
     if (tokens.value && tokens.value.length > 0) {

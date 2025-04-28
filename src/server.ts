@@ -74,7 +74,7 @@ export interface StartMcpServerParams {
  * Builds the tools to inject the context then binds them to the server.
  * Connects the server to the transport.
  */
-export async function startMcpServer(params: StartMcpServerParams) {
+export async function solanaMCPServer(params: StartMcpServerParams) {
   const {
     name = DEFAULT_SERVER_NAME,
     version = DEFAULT_SERVER_VERSION,
@@ -85,6 +85,9 @@ export async function startMcpServer(params: StartMcpServerParams) {
   const mcpServer = new McpServer({
     name,
     version,
+    capabilities: {
+      tools: {},
+    },
   });
 
   const connection = createSolanaConnection(config);

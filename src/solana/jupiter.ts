@@ -15,6 +15,11 @@ import {
   sendAndConfirmTransaction,
 } from "./transaction";
 
+/**
+ * Fetches a quote for a swap using the Jupiter API.
+ * To simplify the operations for an agent the params.amount uses the UI amount (before applying decimals).
+ * ie: When swapping 1 SOL to USDC, the amount is 1.0 instead of 1000000000.
+ */
 export async function getQuote(params: JupiterQuoteParams, context: Context) {
   try {
     const {
@@ -25,10 +30,13 @@ export async function getQuote(params: JupiterQuoteParams, context: Context) {
       swapMode = "ExactIn",
     } = params;
 
+    // When swap mode is ExactIn, the amount will be normalized using the input mint decimals.
     const inputMintDecimals = await getTokenDecimals(
       { mint: inputMint },
       context
     );
+
+    // When swap mode is ExactOut, the amount will be normalized using the output mint decimals.
     const outputMintDecimals = await getTokenDecimals(
       { mint: outputMint },
       context
@@ -131,6 +139,9 @@ export async function swap(params: JupiterSwapParams, context: Context) {
   }
 }
 
+/**
+ * Fetches the price of a token in USD or another token.
+ */
 export async function getPrice(params: GetPriceParams) {
   try {
     const {
