@@ -7,6 +7,7 @@ import {
 import { Context } from "./context";
 
 interface MintParams {
+  /** The mint address of the token */
   mint: string;
 }
 export async function getTokenSupply(
@@ -96,6 +97,9 @@ export async function getTokenProgramByMintAddress(
   }
 }
 
+/**
+ * Fetches the number of decimals for a given token mint address.
+ */
 export async function getTokenDecimals(params: MintParams, context: Context) {
   try {
     const { mint } = params;

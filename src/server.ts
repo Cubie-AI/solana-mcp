@@ -85,6 +85,9 @@ export async function startMcpServer(params: StartMcpServerParams) {
   const mcpServer = new McpServer({
     name,
     version,
+    capabilities: {
+      tools: {},
+    },
   });
 
   const connection = createSolanaConnection(config);

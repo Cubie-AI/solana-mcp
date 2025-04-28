@@ -1,7 +1,5 @@
-import { describe, expect, it } from "@jest/globals";
+import { describe, it } from "@jest/globals";
 
 describe("solana/address", () => {
-  it("should pass a basic test", () => {
-    expect(true).toBe(true);
-  });
+  it("Fetch the holdings for the address", async () => {});
 });
