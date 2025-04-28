@@ -8,7 +8,8 @@ export interface SolanaClientConfig {
   name?: string;
   version?: string;
 }
-export async function solanaClient(params: SolanaClientConfig) {
+
+export async function solanaMCPClient(params: SolanaClientConfig) {
   const {
     name = DEFAULT_CLIENT_NAME,
     version = DEFAULT_CLIENT_VERSION,
