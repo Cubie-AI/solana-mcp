@@ -1,5 +1,6 @@
 import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { Context } from "../context";
 import {
   getPublicKey,
   InvalidValueError,
@@ -10,7 +11,6 @@ import {
   GetAddressHoldingsParams,
   GetSignatureParams,
 } from "./address.types";
-import { Context } from "./context";
 
 export async function getAddressBalance(
   params: GetAddressBalanceParams,

@@ -8,8 +8,9 @@ export function validateNotNull(value: any, fieldName: string) {
 
 export function validateListResponse(value: any, fieldName: string) {
   validateNotNull(value, fieldName);
-
   if (!Array.isArray(value)) {
     throw new InvalidValueError(`${fieldName} must be an array`);
   }
+
+  return value;
 }

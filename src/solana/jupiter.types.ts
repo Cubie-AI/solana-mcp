@@ -34,7 +34,7 @@ interface JupiteRouteResponse {
 /**
  * Jupiter Quote Response
  */
-interface JupiterQuoteResponse {
+export interface JupiterQuoteResponse {
   inputMint: string;
   inAmount: string;
   outputMint: string;

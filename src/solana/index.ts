@@ -1,6 +1,5 @@
+export * from "../context";
 export * from "./address";
-export * from "./connection";
-export * from "./context";
 export * from "./jupiter";
 export * from "./jupiter.types";
 export * from "./operations";

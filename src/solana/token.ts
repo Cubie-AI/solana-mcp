@@ -1,10 +1,10 @@
 import { ParsedAccountData, TokenAmount } from "@solana/web3.js";
+import { Context } from "../context";
 import {
   getPublicKey,
   InvalidValueError,
   validateListResponse,
 } from "../utils";
-import { Context } from "./context";
 
 interface MintParams {
   /** The mint address of the token */
