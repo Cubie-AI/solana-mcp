@@ -10,7 +10,10 @@ import { SUPPORTED_TOOLS } from "./toolList";
  * The function will call the tool method and convert the results so
  * that they adhere to the protocol.
  */
-function buildToolHandler(tool: ToolMethod, context: Context) {
+export function buildToolHandler<T extends Context = Context>(
+  tool: ToolMethod<T>,
+  context: T
+) {
   return async (args: any) => {
     let result: CallToolResult;
     try {

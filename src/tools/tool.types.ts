@@ -1,4 +1,6 @@
-import { Context } from "../solana/context";
+import { Context } from "../context";
 
 /** All tools will either return their result or throw an error */
-export type ToolMethod = (args: any, context: Context) => PromiseLike<any>;
+export type ToolMethod<T extends Context = Context> =
+  | ((args: any, context: T) => Promise<any>)
+  | ((args: any, context: T) => any);

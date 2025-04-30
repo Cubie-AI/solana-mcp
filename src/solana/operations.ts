@@ -1,6 +1,6 @@
 import { LAMPORTS_PER_SOL, SystemProgram } from "@solana/web3.js";
+import { Context } from "../context";
 import { getPublicKey } from "../utils";
-import { Context } from "./context";
 import { sendAndConfirmTransaction } from "./transaction";
 
 interface TransferSolanaParams {
@@ -11,17 +11,18 @@ export async function transferSolana(
   params: TransferSolanaParams,
   context: Context
 ) {
+  const { payerKeypair, connection } = context;
   try {
     const amount = Math.floor(params.amount * LAMPORTS_PER_SOL); // 1 sol = 1e9 lamports
     const { to } = params;
 
-    if (!context.keypair) {
+    if (!payerKeypair) {
       throw new Error("Keypair is required for transfer");
     }
 
     const instructions = [
       SystemProgram.transfer({
-        fromPubkey: context.keypair.publicKey,
+        fromPubkey: payerKeypair.publicKey,
         toPubkey: getPublicKey(to), // Ensure to use the correct public key
         lamports: amount,
       }),
@@ -29,7 +30,7 @@ export async function transferSolana(
 
     const signature = await sendAndConfirmTransaction({
       instructions,
-      payer: context.keypair,
+      payer: payerKeypair,
       context: context,
       signers: [],
       commitment: "confirmed",

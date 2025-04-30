@@ -1,5 +1,5 @@
+import { solanaMCPClient } from "@cubie-ai/solana-mcp";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { solanaMCPClient } from "../../dist";
 
 const CUBIE_MINT = "2MH8ga3TuLvuvX2GUtVRS2BS8B9ujZo3bj5QeAkMpump";
 async function main() {
@@ -8,11 +8,13 @@ async function main() {
     command: "node",
   });
 
-  const client = await solanaMCPClient({
+  const client = solanaMCPClient({
     name: "Solana MCP Client",
     version: "1.0.0",
     transport: transport,
   });
+
+  await client.connect(transport);
 
   const tools = await client.listTools();
   console.dir(tools, { depth: null });
