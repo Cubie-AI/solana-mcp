@@ -1,6 +1,6 @@
 {
   "name": "@cubie-ai/solana-mcp",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A tiny Solana MCP framework built by Cubie AI.",
   "license": "ISC",
   "author": "0xSoc <contact@cubie.fun> (https://cubie.fun)",
@@ -36,6 +36,7 @@
     "dev": "node --import tsx --watch -r ts-node/register src/index.ts",
     "prepublishOnly": "npm run build",
     "test": "jest",
+    "test:utils": "jest --config tests/utils/jest.config.js",
     "docs": "typedoc --out docs --theme default --tsconfig tsconfig.json --excludePrivate --excludeProtected --excludeExternals --includeVersion src/index.ts"
   },
   "devDependencies": {

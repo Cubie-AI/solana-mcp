@@ -1,13 +1,15 @@
 import {
   AddressLookupTableAccount,
+  Commitment,
+  Connection,
   Keypair,
   Transaction,
   TransactionInstruction,
   TransactionMessage,
   VersionedTransaction,
 } from "@solana/web3.js";
-import { getErrorMessage } from "../utils";
-import { Context } from "./context";
+import { Context } from "../context";
+import { getErrorMessage, UnsupportedMethod } from "../utils";
 
 /**
  * Extracts the instructions from a transaction
@@ -77,6 +79,7 @@ export async function buildVersionedTransaction({
 
   return versionedTransaction;
 }
+
 /**
  * Submits a transaction to the RPC node and polls for confirmation.
  * This function will retry the transaction if it fails with a BlockHeightExceeded error.
@@ -89,47 +92,90 @@ export async function sendAndConfirmTransaction(
     payer,
     signers,
     commitment = "confirmed",
-    context,
+    context: { connection } = { connection: null },
   } = params;
 
-  let signature = "";
-  let currentCommitment = undefined;
-  let failureCount = 0;
-  let error = "";
-  while (commitment !== currentCommitment && failureCount < 3) {
-    try {
-      if (!signature) {
-        const versionedTransaction = await buildVersionedTransaction({
-          payer,
-          instructions,
-          signers,
-          context,
-        });
-        signature = await context.connection.sendTransaction(
-          versionedTransaction
-        );
-      } else {
-        const status = await context.connection.getSignatureStatus(signature);
-        // In this case the transaction as successfully included in a block
-        // but failed. Here we may want to retry the transaction.
-        if (status?.value?.err) {
-          error = `Transaction failed: ${JSON.stringify(status.value.err)}`;
-          break;
-        } else if (currentCommitment !== status.value?.confirmationStatus) {
-          currentCommitment = status.value?.confirmationStatus;
-        }
-      }
+  let result;
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } catch (error) {
-      error = getErrorMessage(error);
-      failureCount++;
+  try {
+    if (!connection) {
+      throw new UnsupportedMethod(
+        "sendAndConfirmTransaction requires a connection"
+      );
     }
+
+    const versionedTransaction = await buildVersionedTransaction({
+      payer,
+      instructions,
+      signers,
+      context: { connection },
+    });
+
+    const signature = await connection.sendTransaction(versionedTransaction);
+
+    const confirmed = await confirmTransaction({
+      signature,
+      connection,
+      commitment,
+    });
+
+    result = {
+      signature,
+      success: confirmed?.success ?? false,
+    };
+  } catch (error) {
+    error = getErrorMessage(error);
   }
 
-  return {
-    success: commitment === currentCommitment,
-    signature,
-    error,
-  };
+  return result;
+}
+
+interface ConfirmTransactionParams {
+  signature: string;
+  connection: Connection;
+  commitment?: Commitment;
+}
+/**
+ * Confirms a transaction by polling the RPC node for its status.
+ */
+async function confirmTransaction(params: ConfirmTransactionParams) {
+  const { signature, connection, commitment = "confirmed" } = params;
+  let attempts = 0;
+  let result;
+  let currentCommitment = undefined;
+  try {
+    while (commitment !== currentCommitment && attempts < 3) {
+      const status = await connection.getSignatureStatus(signature);
+
+      // In this case the transaction was successfully included in a block
+      // but failed. Here we may want to retry the transaction.
+      if (status?.value?.err) {
+        throw new Error(
+          `Transaction failed: ${JSON.stringify(status.value.err)}`
+        );
+      }
+
+      currentCommitment = status.value?.confirmationStatus;
+      attempts++;
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+
+    if (attempts >= 3) {
+      throw new Error(
+        "Transaction confirmation timed out. Exceeded 3 attempts."
+      );
+    }
+
+    result = {
+      success: true,
+      signature,
+    };
+  } catch (error) {
+    result = {
+      success: false,
+      error: getErrorMessage(error),
+    };
+  } finally {
+    return result;
+  }
 }
