@@ -1,6 +1,6 @@
 import { LAMPORTS_PER_SOL, SystemProgram } from "@solana/web3.js";
 import { Context } from "../context";
-import { getPublicKey } from "../utils";
+import { getPublicKey, validateContext } from "../utils";
 import { sendAndConfirmTransaction } from "./transaction";
 
 interface TransferSolanaParams {
@@ -11,6 +11,7 @@ export async function transferSolana(
   params: TransferSolanaParams,
   context: Context
 ) {
+  validateContext(context);
   const { payerKeypair, connection } = context;
   try {
     const amount = Math.floor(params.amount * LAMPORTS_PER_SOL); // 1 sol = 1e9 lamports

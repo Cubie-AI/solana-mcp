@@ -1,9 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import { Context } from "../solana";
+import { Context, ContextConfig } from "../solana";
 import { Err, Ok } from "../utils";
-import { ToolMethod } from "./tool.types";
-import { SUPPORTED_TOOLS } from "./toolList";
+import { ServerToolSchema, ToolMethod } from "./tool.types";
+import { SUPPORTED_TOOLS_MAP } from "./toolList";
 
 /**
  * Returns a function that can be safely registered with an MCP server.
@@ -30,13 +30,23 @@ export function buildToolHandler<T extends Context = Context>(
  * Binds all the tools to the server.
  * see toolList.ts for the list of tools.
  */
-export function bindTools(server: McpServer, context: Context) {
-  for (const { name, description, parameters, method } of SUPPORTED_TOOLS) {
+export function bindTools<
+  C extends ContextConfig,
+  T extends Record<string, ServerToolSchema<C>>
+>(server: McpServer, tools: T, context: C) {
+  const allTools = Object.entries({
+    ...SUPPORTED_TOOLS_MAP,
+    ...tools,
+  });
+
+  console.log("Binding tools:", allTools);
+
+  for (const [name, tool] of allTools) {
     server.tool(
       name,
-      description,
-      parameters,
-      buildToolHandler(method, context)
+      tool.description,
+      tool.parameters,
+      buildToolHandler(tool.method, context)
     );
   }
 }

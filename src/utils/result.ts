@@ -18,8 +18,9 @@ export function Ok(data: any): CallToolResult {
     content: [
       {
         type: "text",
-        text: JSON.stringify(data),
+        text: JSON.stringify(data, null, 2),
       },
     ],
+    isError: false,
   };
 }
