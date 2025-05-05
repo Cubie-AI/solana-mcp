@@ -15,5 +15,6 @@
     "declarationDir": "dist",
     "types": ["node", "jest"]
   },
-  "include": ["src/**/*.ts", "src/**/*.json"]
+  "include": ["src/**/*.ts", "src/**/*.json"],
+  "exclude": ["node_modules", "tests/**/*.test.ts"]
 }

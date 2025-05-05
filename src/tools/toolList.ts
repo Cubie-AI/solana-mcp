@@ -1,7 +1,8 @@
-import { z, ZodRawShape } from "zod";
+import { z } from "zod";
 import {
   getPrice,
   getQuote,
+  getTokenDecimals,
   getTokenHolders,
   getTokenProgramByMintAddress,
   getTokenSupply,
@@ -11,16 +12,8 @@ import {
   getAddressHoldings,
   getSignaturesForAddress,
 } from "../solana/";
-import { ToolMethod } from "./tool.types";
 
-type ToolSpec = {
-  name: string;
-  description: string;
-  parameters: ZodRawShape;
-  method: ToolMethod;
-};
-
-export const SUPPORTED_TOOLS: ToolSpec[] = [
+export const SUPPORTED_TOOLS = [
   {
     name: "getTokenHolders",
     description: "Get token holders for a specific mint address",
@@ -44,6 +37,15 @@ export const SUPPORTED_TOOLS: ToolSpec[] = [
       mint: z.string(),
     },
     method: getTokenProgramByMintAddress,
+  },
+
+  {
+    name: "getTokenDecimals",
+    description: "Get the decimals of a specific token",
+    parameters: {
+      mint: z.string(),
+    },
+    method: getTokenDecimals,
   },
 
   // Tools for operating on an address
@@ -98,3 +100,15 @@ export const SUPPORTED_TOOLS: ToolSpec[] = [
     method: getPrice,
   },
 ];
+
+export const SUPPORTED_TOOLS_MAP = SUPPORTED_TOOLS.reduce(
+  (acc, tool) => ({
+    ...acc,
+    [tool.name]: {
+      description: tool.description,
+      parameters: tool.parameters,
+      method: tool.method,
+    },
+  }),
+  {}
+);

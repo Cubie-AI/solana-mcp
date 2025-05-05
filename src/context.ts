@@ -8,15 +8,13 @@ export interface ContextConfig {
    * A connection to a fullnode JSON RPC endpoint
    */
   connection: Connection;
-
   /**
-   * The payer keypair.
-   * This is used for signing transactions.
+   * The payer keypair to use for signing transactions.
    */
   payerKeypair?: Keypair;
 }
 
-export class Context {
+export class Context implements ContextConfig {
   /**
    * The connection to the Solana cluster.
    */

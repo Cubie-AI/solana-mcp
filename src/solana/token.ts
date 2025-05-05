@@ -3,6 +3,7 @@ import { Context } from "../context";
 import {
   getPublicKey,
   InvalidValueError,
+  validateContext,
   validateListResponse,
 } from "../utils";
 
@@ -16,6 +17,8 @@ export async function getTokenSupply(
 ): Promise<TokenAmount> {
   const { mint } = params;
   try {
+    validateContext(context);
+
     const response = await context.connection.getTokenSupply(
       getPublicKey(mint),
       "confirmed"
@@ -33,6 +36,7 @@ export async function getTokenSupply(
 
 export async function getTokenHolders(params: MintParams, context: Context) {
   try {
+    validateContext(context);
     const { mint } = params;
     const tokenProgramId = await getTokenProgramByMintAddress(
       { mint },

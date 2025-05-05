@@ -2,8 +2,8 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import { Context } from "./solana";
-import { bindTools } from "./tools";
+import { Context, ContextConfig } from "./solana";
+import { bindTools, ServerToolConfig } from "./tools";
 import { BaseMCPConfig } from "./types";
 import {
   DEFAULT_SERVER_NAME,
@@ -14,7 +14,7 @@ import {
 /**
  * Parameters for starting the MCP server.
  */
-export interface SolanaMCPServerConfig<T extends Context = Context>
+export interface SolanaMCPServerConfig<T extends ContextConfig>
   extends BaseMCPConfig {
   /**
    * The transport mechanism to use for the server.
@@ -24,11 +24,18 @@ export interface SolanaMCPServerConfig<T extends Context = Context>
     | StdioServerTransport
     | SSEServerTransport
     | StreamableHTTPServerTransport;
+
   /**
    * The configuration for the server.
    * This includes the Solana RPC URL, WebSocket URL, and commitment level.
    */
-  config: T;
+  context: T;
+
+  /**
+   * A map of tools to bind to the server. Providing the name of any built-in tools
+   * will allow them to be registered with the server.
+   */
+  tools?: ServerToolConfig<T>[];
 }
 
 /**
@@ -45,7 +52,8 @@ export function solanaMCPServer<T extends Context>(
     name = DEFAULT_SERVER_NAME,
     version = DEFAULT_SERVER_VERSION,
     transport,
-    config = DEFAULT_SOLANA_CONFIG,
+    context = DEFAULT_SOLANA_CONFIG,
+    tools = {},
   } = params;
 
   if (!transport) {
@@ -55,8 +63,11 @@ export function solanaMCPServer<T extends Context>(
     name,
     version,
     transport,
+    capabilities: {
+      tools: {},
+    },
   });
 
-  bindTools(mcpServer, new Context(config));
+  bindTools(mcpServer, tools, context);
   return mcpServer;
 }
