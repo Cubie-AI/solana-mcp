@@ -57,6 +57,7 @@ describe("Client", () => {
   let baseUrl: URL;
 
   let client: Client;
+  let clientTransport: StreamableHTTPClientTransport;
 
   beforeEach(async () => {
     const setup = await setupServer();
@@ -65,8 +66,8 @@ describe("Client", () => {
     serverTransport = setup.transport;
     baseUrl = setup.baseUrl;
 
-    // Set up resuable Client
-    const clientTransport = new StreamableHTTPClientTransport(
+    // Set up reusable Client
+    clientTransport = new StreamableHTTPClientTransport(
       new URL("/mcp", baseUrl)
     );
     client = solanaMCPClient({
@@ -79,7 +80,13 @@ describe("Client", () => {
   afterEach(async () => {
     await mcpServer.close().catch(() => {});
     await serverTransport.close().catch(() => {});
-    server.close();
+    await clientTransport.close().catch(() => {});
+    await client?.close().catch(() => {});
+    await new Promise((resolve) => {
+      server.close(() => {
+        resolve(true);
+      });
+    });
   });
 
   // IN THESE TESTS, WE ARE TESTING THE CLIENTS
@@ -94,6 +101,8 @@ describe("Client", () => {
 
     await client.connect(transport);
     expect(client).toBeDefined();
+    await transport.close();
+    await client.close();
   });
 
   it("should be able to connect to SSE server with StreamableHTTPCClient", async () => {
@@ -108,6 +117,8 @@ describe("Client", () => {
     await client.connect(clientTransport);
     const tools = await client.listTools();
     expect(tools).toBeDefined();
+    await client.close();
+    await clientTransport.close();
   });
 
   it("should be able to create a client with StreamableHTTPClientTransport", async () => {
@@ -122,6 +133,8 @@ describe("Client", () => {
     await client.connect(clientTransport);
     const tools = await client.listTools();
     expect(tools).toBeDefined();
+    await client.close();
+    await clientTransport.close();
   });
 
   // TEST ALL TOOLS IN src/solana/token.ts

@@ -39,8 +39,6 @@ export function bindTools<
     ...tools,
   });
 
-  console.log("Binding tools:", allTools);
-
   for (const [name, tool] of allTools) {
     server.tool(
       name,

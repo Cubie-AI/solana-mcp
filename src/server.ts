@@ -14,7 +14,8 @@ import {
 /**
  * Parameters for starting the MCP server.
  */
-export interface SolanaMCPServerConfig<T> extends BaseMCPConfig {
+export interface SolanaMCPServerConfig<T extends ContextConfig>
+  extends BaseMCPConfig {
   /**
    * The transport mechanism to use for the server.
    * Can be either StdioServerTransport or SSEServerTransport.
@@ -28,13 +29,13 @@ export interface SolanaMCPServerConfig<T> extends BaseMCPConfig {
    * The configuration for the server.
    * This includes the Solana RPC URL, WebSocket URL, and commitment level.
    */
-  context: T extends ContextConfig ? T : never;
+  context: T;
 
   /**
    * A map of tools to bind to the server. Providing the name of any built-in tools
    * will allow them to be registered with the server.
    */
-  tools?: T extends ContextConfig ? ServerToolConfig<T> : never;
+  tools?: ServerToolConfig<T>[];
 }
 
 /**
@@ -44,8 +45,8 @@ export interface SolanaMCPServerConfig<T> extends BaseMCPConfig {
  * Builds the tools to inject the context then binds them to the server.
  * You are required to call `server.connect(transport)` to start the server.
  */
-export function solanaMCPServer<T>(
-  params: SolanaMCPServerConfig<T extends Context ? T : never>
+export function solanaMCPServer<T extends Context>(
+  params: SolanaMCPServerConfig<T>
 ) {
   const {
     name = DEFAULT_SERVER_NAME,

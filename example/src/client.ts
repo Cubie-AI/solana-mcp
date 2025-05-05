@@ -17,7 +17,6 @@ async function main() {
   await client.connect(transport);
 
   const tools = await client.listTools();
-  console.dir(tools, { depth: null });
 
   const supply = await client.callTool({
     name: "getTokenSupply",
@@ -25,7 +24,6 @@ async function main() {
       mint: CUBIE_MINT,
     },
   });
-  console.dir(supply, { depth: null });
 }
 
 main();
