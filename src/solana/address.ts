@@ -4,6 +4,7 @@ import { Context } from "../context";
 import {
   getPublicKey,
   InvalidValueError,
+  validateContext,
   validateListResponse,
 } from "../utils";
 import {
@@ -17,6 +18,8 @@ export async function getAddressBalance(
   context: Context
 ) {
   const { address } = params;
+
+  validateContext(context);
   try {
     const accountInfo = await context.connection.getAccountInfo(
       getPublicKey(address),
@@ -43,6 +46,7 @@ export async function getSignaturesForAddress(
   context: Context
 ) {
   const { address, limit, before, until } = params;
+  validateContext(context);
   try {
     const signatures = await context.connection.getSignaturesForAddress(
       getPublicKey(address),
@@ -69,6 +73,7 @@ export async function getAddressHoldings(
 ) {
   const { address } = params;
   const { connection } = context;
+  validateContext(context);
   try {
     const mint = getPublicKey(address);
     const tokens = await connection.getParsedTokenAccountsByOwner(mint, {
