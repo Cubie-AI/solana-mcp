@@ -53,6 +53,8 @@ describe("server", () => {
   let mcpServer: McpServer;
   let serverTransport: StreamableHTTPServerTransport;
   let baseUrl: URL;
+  let clientTransport: StreamableHTTPClientTransport;
+  let client: any;
 
   beforeEach(async () => {
     const setup = await setupServer();
@@ -65,15 +67,22 @@ describe("server", () => {
   afterEach(async () => {
     await mcpServer.close().catch(() => {});
     await serverTransport.close().catch(() => {});
-    server.close();
+    await new Promise((resolve) => {
+      server.close(() => {
+        resolve(true);
+      });
+    });
+
+    await clientTransport.close().catch(() => {});
+    await client?.close().catch(() => {});
   });
 
   it("should support a client", async () => {
-    const transport = new StreamableHTTPClientTransport(baseUrl);
-    const client = solanaMCPClient({
-      transport,
+    clientTransport = new StreamableHTTPClientTransport(baseUrl);
+    client = solanaMCPClient({
+      transport: clientTransport,
     });
-    await client.connect(transport);
+    await client.connect(clientTransport);
 
     const { tools } = await client.listTools();
     expect(tools).toBeDefined();
@@ -81,12 +90,12 @@ describe("server", () => {
   });
 
   it("should throw error when using solana tools", async () => {
-    const transport = new StreamableHTTPClientTransport(baseUrl);
-    const client = solanaMCPClient({
-      transport,
+    clientTransport = new StreamableHTTPClientTransport(baseUrl);
+    client = solanaMCPClient({
+      transport: clientTransport,
     });
 
-    await client.connect(transport);
+    await client.connect(clientTransport);
 
     const result = (await client.callTool({
       name: "getTokenSupply",
@@ -95,7 +104,6 @@ describe("server", () => {
       },
     })) as any;
 
-    console.dir(result);
     expect(result).toBeDefined();
     expect(result.isError);
   });
