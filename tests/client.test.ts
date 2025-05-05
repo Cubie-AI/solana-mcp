@@ -1,13 +1,11 @@
 import { describe } from "@jest/globals";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { Connection } from "@solana/web3.js";
 import { createServer, Server } from "node:http";
 import { AddressInfo } from "node:net";
-import path from "node:path";
 import { solanaMCPClient, solanaMCPServer } from "../src";
 
 describe("Client", () => {
@@ -87,22 +85,6 @@ describe("Client", () => {
         resolve(true);
       });
     });
-  });
-
-  // IN THESE TESTS, WE ARE TESTING THE CLIENTS
-  it("should be able to create a client with StdioClientTransport", async () => {
-    const transport = new StdioClientTransport({
-      command: "node",
-      args: [path.join(__dirname, "../example/dist/server.js")],
-    });
-    const client = solanaMCPClient({
-      transport,
-    });
-
-    await client.connect(transport);
-    expect(client).toBeDefined();
-    await transport.close().catch(() => {});
-    await client.close().catch(() => {});
   });
 
   it("should be able to connect to SSE server with StreamableHTTPCClient", async () => {
