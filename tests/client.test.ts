@@ -101,8 +101,8 @@ describe("Client", () => {
 
     await client.connect(transport);
     expect(client).toBeDefined();
-    await transport.close();
-    await client.close();
+    await transport.close().catch(() => {});
+    await client.close().catch(() => {});
   });
 
   it("should be able to connect to SSE server with StreamableHTTPCClient", async () => {
