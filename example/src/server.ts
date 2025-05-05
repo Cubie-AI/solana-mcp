@@ -1,7 +1,6 @@
 import { Context, solanaMCPServer } from "@cubie-ai/solana-mcp";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { Connection } from "@solana/web3.js";
-import z from "zod";
 
 // Define your custom server context
 // This is the context that will be passed to all tools
@@ -28,16 +27,7 @@ async function main() {
   const server = solanaMCPServer<MyServerContext>({
     transport,
     context: customServerConfig,
-    tools: {
-      myCustomTool: {
-        description: "My custom tool",
-        parameters: {
-          test: z.string().describe("Test parameter"),
-          additionalParam: z.number().describe("Additional parameter"),
-        },
-        method: myCustomTool, // Authomatic type inference on tool handlers
-      },
-    },
+    tools: [],
   });
 
   // Start the server
